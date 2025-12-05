@@ -1,0 +1,32 @@
+# -------------------------------------------------------------------------
+# ETAPA 1: BUILD (Compilación)
+FROM mcr.microsoft.com/dotnet/sdk:10.0-windowsservercore-ltsc2022 AS build
+WORKDIR /src
+
+# Copiar el archivo .csproj y restaurar dependencias
+COPY ["SampleMcpServer/SampleMcpServer.csproj", "SampleMcpServer/"]
+RUN dotnet restore "SampleMcpServer/SampleMcpServer.csproj"
+
+# Copiar el resto del código fuente.
+COPY . .
+WORKDIR "/src/SampleMcpServer"
+
+# Publicar la aplicación como self-contained y single-file.
+RUN dotnet publish "SampleMcpServer.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o /app/publish
+
+# -------------------------------------------------------------------------
+# ETAPA 2: FINAL (Runtime)
+FROM mcr.microsoft.com/windows/servercore:ltsc2022 AS final
+WORKDIR /app
+
+# Copiar el ejecutable
+COPY --from=build /app/publish .
+
+# *** Solución de RED (ASPNETCORE_URLS): Forzar a la aplicación a escuchar en 0.0.0.0 ***
+ENV ASPNETCORE_URLS=http://0.0.0.0:3010
+
+# La aplicación escucha en el puerto 3010
+EXPOSE 3010
+
+# *** CORRECCIÓN FINAL: Usar CMD para ejecutar el .exe de forma confiable ***
+ENTRYPOINT ["cmd", "/C", "SampleMcpServer.exe"]

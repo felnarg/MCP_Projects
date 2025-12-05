@@ -1,0 +1,72 @@
+# ----------------------------------------------------------------------
+# Next.js / Node.js
+# ----------------------------------------------------------------------
+
+# Directorios generados por Next.js
+.next/
+out/
+build/
+
+# Dependencias de módulos (generado por npm, yarn, pnpm)
+**/node_modules
+.npm
+.yarn
+.pnpm-store
+
+# Archivos de configuración de Next.js
+.env*.local
+.env.development.local
+.env.production.local
+
+# Archivos de caché del motor de paquetes
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Directorios de caché general (por ejemplo, para pruebas)
+/temp
+
+# ----------------------------------------------------------------------
+# Visual Studio Code
+# ----------------------------------------------------------------------
+
+# Directorio de configuración de la estación de trabajo
+.vscode/
+
+# ----------------------------------------------------------------------
+# C# / .NET Core / Visual Studio
+# ----------------------------------------------------------------------
+
+# Binarios y carpetas de salida
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+**/[Tt]emp/
+
+# Archivos de metadatos de usuario de Visual Studio
+*.suo
+*.user
+*.useros
+
+# Paquetes de NuGet (restaurados localmente)
+.nuget/
+**/packages/
+!**/packages/build/
+!**/packages/lib/
+!**/packages/tools/
+
+# Archivos de Visual Studio que no son necesarios
+*.log
+*.rpt
+*.vspscc
+*.vssscc
+.vs/
+
+# Caché de .NET Core/SDK
+**/*.ide.log
+
+# Archivos de configuración de pruebas
+TestResults/
