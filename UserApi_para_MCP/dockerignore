@@ -1,0 +1,13 @@
+# Ignorar carpetas generadas por Visual Studio y .NET
+**/.vs
+**/bin
+**/obj
+
+# Ignorar archivos de paquetes
+**/*.pdb
+
+# Ignorar el Dockerfile mismo
+Dockerfile
+
+# Ignorar el .dockerignore mismo
+.dockerignore

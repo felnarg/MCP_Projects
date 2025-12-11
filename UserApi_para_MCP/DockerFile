@@ -1,0 +1,32 @@
+# -------------------------------------------------------------------------
+# ETAPA 1: BUILD (Compilación)
+FROM mcr.microsoft.com/dotnet/sdk:10.0-windowsservercore-ltsc2022 AS build
+WORKDIR /src
+
+# 1. Copiar TODOS los csproj de las capas para poder restaurar dependencias
+COPY ["UsersApi/UsersApi.csproj", "UsersApi/"]
+COPY ["Domain/Domain.csproj", "Domain/"]
+COPY ["Application/Application.csproj", "Application/"]
+COPY ["Infrastructure/Infrastructure.csproj", "Infrastructure/"]
+
+# 2. Restaurar dependencias (esto leerá las referencias a los otros proyectos)
+RUN dotnet restore "UsersApi/UsersApi.csproj"
+
+# 3. Copiar TODO el código fuente de todas las carpetas
+COPY . .
+
+# 4. Cambiar al directorio de trabajo de la API para publicar
+WORKDIR "/src/UsersApi"
+RUN dotnet publish "UsersApi.csproj" -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -o /app/publish
+
+# -------------------------------------------------------------------------
+# ETAPA 2: FINAL
+FROM mcr.microsoft.com/windows/servercore:ltsc2022 AS final
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+ENV ASPNETCORE_URLS=http://0.0.0.0:3030
+EXPOSE 3030
+
+ENTRYPOINT ["cmd", "/C", "UsersApi.exe"]
